@@ -1,0 +1,100 @@
+### 1. First copy findZX to output directory ($MAINDIR/working/Simon/$PROJECT)
+
+### 2. Make a directory in the findZX/workflow directory called "setup" and create the necessary config.yml in that directory.
+### run_name should be the same as $PROJECT.
+### The synteny reference should be one where the chromsome names are the same as they should appear in the plots.
+### The path to "units.tsv" should be in $MAINDIR/working/Simon/$PROJECT/findZX/workflow/setup/units.tsv.
+### Do not use the trimming, nor subsampling option. 
+
+### 3. Modify cluster.yml in the findZX/ directory with proper snic project etc.
+
+### 4. Exclude some of the rules fcrom the pipeline. Go into findZX/workflow/rules directory and modify mapping.smk
+### and variant_calling_platypus.smk. Put a "#" at the beginning of line for "rule map_reads", "rule samtools_view", 
+### "rule mark_duplicates", "rule platypus", "rule bgzip_tabix", and "rule vcftools_filter".
+
+### 5. Run script:
+
+screen -S findZX;
+
+### Set parameters
+MAINDIR=/crex/proj/snic2020-2-25/nobackup/simon/Sylvioidea;
+PROJECT=Rasolark_2021;
+WORKDIR=$MAINDIR/data/$PROJECT;
+OUTDIR=$MAINDIR/working/Simon/$PROJECT/findZX;
+REF=$WORKDIR/A4_make_new_reference/$PROJECT\_consensus_reference.fasta;
+METADATA=$WORKDIR/metadata;
+
+### Load modules
+module load bioinfo-tools bcftools/1.14 \
+gnuparallel/20180822;
+
+### Activate conda environment
+conda activate findZX;
+
+### Create folders
+REF_NAME=$(echo $REF | rev | cut -d'/' -f1 | rev);
+mkdir $OUTDIR/workflow/$PROJECT\_logs \
+$OUTDIR/results $OUTDIR/results/ref \
+$OUTDIR/results/ref/${REF_NAME%.*} \
+$OUTDIR/results/ref/${REF_NAME%.*}/mapped \
+$OUTDIR/results/ref/${REF_NAME%.*}/dedup \
+$OUTDIR/results/$PROJECT \
+$OUTDIR/results/$PROJECT/variant_calling \
+$OUTDIR/results $OUTDIR/results/$PROJECT\_dummy_input;
+
+### Create units.tsv file
+echo -e "sample\tgroup\tfq1\tfq2\n\
+$(cat $METADATA/sample_info.txt | tail -n+2 | \
+awk -F'\t' -v dir=$OUTDIR'/results/'$PROJECT'_dummy_input/' \
+'{if ($3=="Male") {group="homogametic"}; \
+if  ($3=="Female") {group="heterogametic"}; \
+print $1"\t"group"\t"dir$1"_1.fq.gz\t"dir$1"_2.fq.gz";}')" \
+> $OUTDIR/workflow/setup/units.tsv;
+
+### Import and rename own bam and vcf files
+export OUTDIR WORKDIR REF_NAME;
+
+## Define function
+import_bams() {
+
+# Input parameters
+ID=$1;
+SEX=$2;
+
+# Import and rename own bam files
+cp  $WORKDIR/A5_align_reads/$ID\_qsorted_merged_nodup_filtered_sorted.bam \
+$OUTDIR/results/ref/${REF_NAME%.*}/dedup/$ID\__$SEX.sorted.dedup.mismatch.unfiltered.bam;
+cp $WORKDIR/A5_align_reads/$ID\_qsorted_merged_nodup_filtered_sorted.bam.bai \
+$OUTDIR/results/ref/${REF_NAME%.*}/dedup/$ID\__$SEX.sorted.dedup.mismatch.unfiltered.bam.bai;
+};
+
+## Excecute function in parallell
+export -f import_bams;
+parallel --colsep '\t' --header : 'import_bams {1} {2}' :::: $OUTDIR/workflow/setup/units.tsv;
+
+## Import and rename own vcf-file
+cat $OUTDIR/workflow/setup/units.tsv | \
+awk -F'\t' -v OFS='' '$1!="sample" {print $1,"\t",$1,"__",$2}' \
+> $OUTDIR/workflow/setup/sample_names.txt;
+bcftools view -h $WORKDIR/A7_filter_variants/filter3/$PROJECT\_3.vcf.gz | \
+tail -n 1 | tr "\t" "\n" | tail -n+10 > $OUTDIR/workflow/setup/vcf_names_order.txt;
+for ID in $(cat $OUTDIR/workflow/setup/vcf_names_order.txt); \
+do echo $(cat $OUTDIR/workflow/setup/sample_names.txt | \
+awk -v ID=$ID '$1==ID {print $2}');
+done > $OUTDIR/workflow/setup/new_vcf_names.txt; 
+bcftools reheader -s $OUTDIR/workflow/setup/new_vcf_names.txt \
+$WORKDIR/A7_filter_variants/filter3/$PROJECT\_3.vcf.gz \
+-o $OUTDIR/results/$PROJECT/variant_calling/${REF_NAME%.*}.biallelic.minQ20.minDP3.vcf.gz;
+tabix $OUTDIR/results/$PROJECT/variant_calling/${REF_NAME%.*}.biallelic.minQ20.minDP3.vcf.gz;
+
+### Run findZX
+config=$OUTDIR/workflow/setup/config.yml;
+cluster=$OUTDIR/cluster.yml;
+cd $OUTDIR;
+snakemake -s $OUTDIR/workflow/findZX-synteny -j999 -R all -k \
+--use-conda --configfile $config --cluster-config $cluster \
+ --cluster " sbatch -A {cluster.account} -t {cluster.time} -n {cluster.n} \
+-o $OUTDIR/workflow/$PROJECT\_logs/slurm.{rule}.{wildcards}.job%j.out";
+
+### Detach with ctrl+a, then d. Re-attach with screen -r
+### Add -npr to the snakemake command to perform a dry run.
