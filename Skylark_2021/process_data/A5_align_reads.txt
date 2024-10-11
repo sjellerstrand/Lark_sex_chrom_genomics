@@ -1,0 +1,19 @@
+### Set parameters
+MAINDIR=/crex/proj/snic2020-2-25/nobackup/simon/Sylvioidea;
+PROJECT=Skylark_2021;
+WORKDIR=$MAINDIR/data/$PROJECT;
+OUTDIR=$MAINDIR/working/Simon/$PROJECT;
+REF=$WORKDIR/A4_make_new_reference/$PROJECT\_consensus_reference.fasta;
+METADATA=$WORKDIR/metadata;
+
+### Create folders
+mkdir $OUTDIR/A5_align_reads;
+OUTDIR=$OUTDIR/A5_align_reads;
+mkdir $OUTDIR/temp1 $OUTDIR/temp2 \
+$OUTDIR/temp3 $OUTDIR/temp4 $OUTDIR/temp5 \
+$OUTDIR/samples $OUTDIR/duplicates_data;
+
+### Send jobs for each individual
+for IND in $(cat $METADATA/sample_info.txt | tail -n+2 | cut -f1); do
+  sbatch $MAINDIR/scripts/$PROJECT/process_data/A5_align_reads.sh $IND
+done;
