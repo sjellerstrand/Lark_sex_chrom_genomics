@@ -1,0 +1,6 @@
+Sex linked regions
+each scaffold coverign one of know regions manually observed. using rasolark
+flanks moving into other region rrimmed. Dublecheck with skylark, then rasolark with synteny to zebra
+if Z flanking unknoqn scaffold, then assumed all is Z if pattern correct (rasolark parus only)
+For PAR, there is some difference between species in 000137.1. I set the limits so than Raso has a gene not in sex linkage, and skylark has it sex linked instead.
+
