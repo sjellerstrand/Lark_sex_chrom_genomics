@@ -163,6 +163,7 @@ summary(fit)
 sink(paste(OUTDIR, "/age_gen_fit.txt", sep=""))
 print(summary(fit))
 sink()
+saveRDS(fit, paste(OUTDIR, "/age_gen_model.RDS", sep=""))
 
 Age_years <- as.data.frame(Strata_age$Age_years)
 colnames(Age_years) <- "cumAge"
