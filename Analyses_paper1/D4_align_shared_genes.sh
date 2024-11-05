@@ -375,7 +375,7 @@ align_shared_genes() {
     awk '{if($0 ~ /^>/) printf("\n"$0"\n"); else printf($0)} END {printf("\n")}' | tail -n+2 \
     > $OUTDIR/shared_genes/$REGION1\_$REGION2/$GENE/$PROJECT1\_$PROJECT2\_$GENE\_alignment_NT_original_females_ZW_A.fasta;
     cat $OUTDIR/shared_genes/$REGION1\_$REGION2/$GENE/$PROJECT1\_$PROJECT2\_$GENE\_alignment_NT_all.fasta | \
-    grep -f $OUTDIR/metadata/female_ZW_A_sampleID.txt | tr -d ' ' | \
+    seqkit grep -f $OUTDIR/metadata/female_ZW_A_sampleID.txt | tr -d ' ' | \
     awk '{if($0 ~ /^>/) printf("\n"$0"\n"); else printf($0)} END {printf("\n")}' | tail -n+2 \
     > $OUTDIR/shared_genes/$REGION1\_$REGION2/$GENE/$PROJECT1\_$PROJECT2\_$GENE\_alignment_NT_females_ZW_A.fasta;
     cat $OUTDIR/shared_genes/$REGION1\_$REGION2/$GENE/$PROJECT1\_$PROJECT2\_$GENE\_alignment_NT_snpeff_all.fasta | \
