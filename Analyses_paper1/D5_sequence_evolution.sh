@@ -150,7 +150,7 @@ sequence_evolution() {
     SUFFIX="ZW_A";
     GROUPS1=$(echo Z W);
     GROUPS2=$(echo A);
-    BRANCHES=$(echo BranchA BranchSkyA BranchRasoA BranchSkyZ BranchSkyW);
+    BRANCHES=$(echo BranchA BranchRasoA BranchSkyZ BranchSkyW BranchO Node1);
   fi;
 
   # Choose tree topology
