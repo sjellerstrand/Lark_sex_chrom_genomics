@@ -17,7 +17,7 @@ scan_data <- merge(scan_data, window_data, by=c("scaffold", "start", "end"), sor
 scan_data <- subset(scan_data, select=c(-l_all, -S_all))
 scan_data <- cbind(scan_data, rep(NA, nrow(scan_data)), rep(NA, nrow(scan_data)), rep(NA, nrow(scan_data)), rep(NA, nrow(scan_data)))
 colnames(scan_data)[(ncol(scan_data)-3):ncol(scan_data)] <- c("pi_abs", "data_type", "exon_distance", "Project")
-scan_data$pi_abs <- scan_data$thetaPi_all/scan_data$N_tot_sites
+scan_data$pi_abs <- scan_data$thetaPi_all/scan_data$N_callable_sites
 scan_data$data_type <- DATA
 scan_data$exon_distance <- EXON_DIST
 scan_data$Project <- PROJECT
