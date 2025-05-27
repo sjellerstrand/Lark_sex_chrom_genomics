@@ -90,7 +90,7 @@ tree_all$Omega <- MLE_median[match(tree_all$label, names(MLE_median))]
 tree_all$Omega[which(tree_all$label == "")] <- tree_all$Omega[which(tree_all$label == "BranchO")]
 tree_all$log10Omega <- log10(tree_all$Omega)
 node_data_all <- tree_all[,c("label", "Omega", "log10Omega")]
-node_data_all2 <- node_data_all[which(node_data$label == "BranchA" | node_data$label == "BranchZ" | node_data$label == "BranchW"),]
+node_data_all2 <- node_data_all[which(node_data_all$label == "BranchA" | node_data_all$label == "BranchZ" | node_data_all$label == "BranchW"),]
 tree_all <- as.phylo(tree_all)
 
 
