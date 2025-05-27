@@ -537,7 +537,7 @@ plot_tree_3c <- ggtree(tree_3c) %<+% as.data.frame(node_data_3c) +
 annotation_plot <- ggtree(tree_3c) %<+% as.data.frame(node_data_3c) +
   geom_tree(aes(color = log10Omega), alpha = 0) +
   geom_tree(color="white", size=3) +
-  annotate(geom="text", x=c(0, 0, 0, 0, 0, 0, 0) , y=c(36.5, 27.1, 17.5, 8, 3, 2, 1), label=c("SW", "RW", "SZ", "RW", "GTA", "ZFA", "CFA"), color="Black", size=7, hjust=0) +
+  annotate(geom="text", x=c(0, 0, 0, 0, 0, 0, 0) , y=c(36.5, 27.1, 17.5, 8, 3, 2, 1), label=c("SW", "RW", "SZ", "RZ", "GTA", "ZFA", "CFA"), color="Black", size=7, hjust=0) +
   theme_void() +
   theme(legend.position = "none")
 
