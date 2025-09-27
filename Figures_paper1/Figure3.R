@@ -32,7 +32,7 @@ for(j in unique(deg_prop$Strata)) {
   deg_prop$prop[which(deg_prop$Strata == j & deg_prop$Species == "Skylark")] <- deg_prop$n[which(deg_prop$Strata == j & deg_prop$Species == "Skylark")] / sum(deg_prop$n[which(deg_prop$Strata == j & deg_prop$Species == "Skylark")])
 }
 
-deg_prop$Wdegeneration <- factor(deg_prop$Wdegeneration, order=T, labels=c("Functional", "Loss of function", "Partially degenerated", "Degenerated"), levels=c("W functional", "W loss of function", "W partially degenerated", "W degenerated"))
+deg_prop$Wdegeneration <- factor(deg_prop$Wdegeneration, order=T, labels=c("Functional", "Loss-of-function mutation", "Partial exon loss", "Full exon loss"), levels=c("W functional", "W loss of function", "W partially degenerated", "W degenerated"))
 
 
 # Statistics
@@ -85,7 +85,7 @@ for(j in unique(deg_prop2$Strata3)) {
 deg_prop2$Strata3 <- factor(deg_prop2$Strata3, order=T, labels=rev(c("W-S0", "Z-S0", "W-S1", "Z-S1", "W-S2", "Z-S2", "W-S3", "Z-S3", "W-4A", "Z-4A", "W-3-a", "Z-3-a", "W-3-b", "Z-3-b", "W-5", "Z-5", "W-3-c", "Z-3-c", "PAR 5", "PAR 3", "Autosomal")),
                             levels=rev(c("W-S0", "Z-S0", "W-S1", "Z-S1", "W-S2", "Z-S2", "W-S3", "Z-S3", "W-4A", "Z-4A", "W-3a", "Z-3a", "W-3b", "Z-3b", "W-5", "Z-5", "W-3c", "Z-3c", "PAR5", "PAR3", "autosomal")))
 
-deg_prop2$Wdegeneration <- factor(deg_prop2$Wdegeneration, order=T, labels=c("Functional", "Loss of function", "Partially degenerated", "Degenerated"), levels=c("Functional", "Loss of function", "Partially degenerated", "Degenerated"))
+deg_prop2$Wdegeneration <- factor(deg_prop2$Wdegeneration, order=T, labels=c("Functional", "Loss-of-function mutation", "Partial exon loss", "Full exon loss"), levels=c("Functional", "Loss of function", "Partially degenerated", "Degenerated"))
 
 
 ### Test when patterns in strata significantly changes from autosomes and respective Z-W stratum pair 
@@ -517,7 +517,7 @@ pred_seq1_len_phap1$Species <- "NA"
 #Supplementary regions degeneration
 plot_regions1 <- ggplot() +
   geom_bar(data=deg_prop2, aes(x=Species, y=prop, fill=Wdegeneration), stat="identity") +
-  guides(fill=guide_legend(title="Gene status")) +
+  guides(fill=guide_legend(title="Functionality")) +
   scale_fill_manual(values=c("#E4EAF0", "#f09b20", "#f03b20", "#b30000")) +
   labs(x ="Genomic regions (Left: Skylark, Right: Raso lark)", y = "Proportion of genes") +
   facet_wrap(~Strata3, nrow=1) +
@@ -547,16 +547,16 @@ dev.off()
 
 
 plot_curves_len_phap <- ggplot() +
-  geom_line(data=pred_seq1_len_phap0, aes(x=logGeneLen, y=LOF, color="Probability\nloss of function"), linewidth=1) +
-  geom_line(data=pred_seq1_len_phap02, aes(x=logGeneLen, y=LOF, color="Probability\nloss of function"), linewidth=1) +
-  geom_line(data=pred_seq1_len_phap04, aes(x=logGeneLen, y=LOF, color="Probability\nloss of function"), linewidth=1) +
-  geom_line(data=pred_seq1_len_phap06, aes(x=logGeneLen, y=LOF, color="Probability\nloss of function"), linewidth=1) +
-  geom_line(data=pred_seq1_len_phap08, aes(x=logGeneLen, y=LOF, color="Probability\nloss of function"), linewidth=1) +
-  geom_line(data=pred_seq1_len_phap1, aes(x=logGeneLen, y=LOF, color="Probability\nloss of function"), linewidth=1) +
-  scale_color_manual(values = "black", limits="Probability\nloss of function") +
+  geom_line(data=pred_seq1_len_phap0, aes(x=logGeneLen, y=LOF, color="Probability of\nnon-functionality"), linewidth=1) +
+  geom_line(data=pred_seq1_len_phap02, aes(x=logGeneLen, y=LOF, color="Probability of\nnon-functionality"), linewidth=1) +
+  geom_line(data=pred_seq1_len_phap04, aes(x=logGeneLen, y=LOF, color="Probability of\nnon-functionality"), linewidth=1) +
+  geom_line(data=pred_seq1_len_phap06, aes(x=logGeneLen, y=LOF, color="Probability of\nnon-functionality"), linewidth=1) +
+  geom_line(data=pred_seq1_len_phap08, aes(x=logGeneLen, y=LOF, color="Probability of\nnon-functionality"), linewidth=1) +
+  geom_line(data=pred_seq1_len_phap1, aes(x=logGeneLen, y=LOF, color="Probability of\nnon-functionality"), linewidth=1) +
+  scale_color_manual(values = "black", limits="Probability of\nnon-functionality") +
   scale_x_continuous(breaks=c(2, 2.5, 3, 3.5, 4, 4.5), limits=c(2, 4.5)) +
   scale_y_continuous(breaks=c(0, 0.2, 0.4, 0.6, 0.8, 1), limits = c(0, 1)) +
-  labs(x =expression("log"[10]*"(Gene length)"), y = expression(atop("Probability", "loss of function")), title = "Age = 7.5 million generations") +
+  labs(x =expression("log"[10]*"(Gene length)"), y = expression(atop("Probability of", "non-functionality")), title = "Age = 7.5 million generations") +
   annotate(geom="text", x=c(3.0, 3.3, 3.45, 3.6, 3.8, 4) , y=c(0.9, 0.8, 0.7, 0.55, 0.4,  0.25), label=c("pHaplo = 0.0", "pHaplo = 0.2", "pHaplo = 0.4", "pHaplo = 0.6", "pHaplo = 0.8", "pHaplo = 1.0"), color="Black", size=4) +
   guides(color=guide_legend(title="Data")) +
   theme_bw() +
@@ -587,7 +587,7 @@ deg_prop$Strata <- factor(deg_prop$Strata, order=T, labels=rev(c("W-S0", "W-S1",
 
 plot_regions2 <- ggplot() +
   geom_bar(data=deg_prop, aes(x=Species, y=prop, fill=Wdegeneration), stat="identity") +
-  guides(fill=guide_legend(title="Gene status")) +
+  guides(fill=guide_legend(title="Functionality")) +
   scale_fill_manual(values=c("#E4EAF0", "#f09b20", "#f03b20", "#b30000")) +
   labs(x ="Sex-chromosome strata (Left: Skylark, Right: Raso lark)", y = expression(atop("Proportion", "of genes"))) +
   facet_wrap(~Strata, nrow=1) +
@@ -615,14 +615,14 @@ plot_curve_age <- ggplot() +
   geom_ribbon(data=pred_seq1_age, aes(x=Strata_Age_Generations, ymin=LOF-SE*1.96, ymax=LOF+SE*1.96), alpha=0.1) +
   geom_line(data=pred_seq1_age, aes(x=Strata_Age_Generations, y=LOF-SE*1.96), alpha=0.1, linewidth=1) +
   geom_line(data=pred_seq1_age, aes(x=Strata_Age_Generations, y=LOF+SE*1.96), alpha=0.1, linewidth=1) +
-  geom_line(data=pred_seq1_age, aes(x=Strata_Age_Generations, y=LOF, color="Probability\nloss of function"), linewidth=1) +
+  geom_line(data=pred_seq1_age, aes(x=Strata_Age_Generations, y=LOF, color="Probability of\nnon-functionality"), linewidth=1) +
   geom_point(data=pred_seq2_age, aes(x=Strata_Age_Generations, y=prop, color="Strata (Proportions)"), size=3.5) +
-  geom_vline(aes(xintercept=intercept95_age, color="95% probability\nloss of function"), linewidth=1, linetype=2) +
-  scale_color_manual(values = c("black", "#2c7bb6", "#d7191c"), limits=c("Probability\nloss of function", "Strata (Proportions)", "95% probability\nloss of function")) +
+  geom_vline(aes(xintercept=intercept95_age, color="95% probability of\nnon-functionality"), linewidth=1, linetype=2) +
+  scale_color_manual(values = c("black", "#2c7bb6", "#d7191c"), limits=c("Probability of\nnon-functionality", "Strata (Proportions)", "95% probability of\nnon-functionality")) +
   scale_x_continuous(sec.axis=sec_axis(LOF~ (. * coef(agefit)[1]) + (coef(agefit)[2] * (. ^2)), name="Age (million years in larks)", breaks=seq(0,140,20)), breaks=c(0,5,10,15,20,25,30)) +
   scale_y_continuous(limits=c(0,1)) +
   geom_text(data = pred_seq2_age, aes(x=Strata_Age_Generations, y=prop, label = Strata, hjust = c(-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5), vjust = c(1.5,1.5,1.5,0.8,1.5,1.5,-0.5,1.5,1.5,1.5)), color = "Black") +
-  labs(x ="Age (million generations)", y = expression(atop("Probability", "loss of function")), title = NULL) +
+  labs(x ="Age (million generations)", y = expression(atop("Probability of", "non-functionality")), title = NULL) +
   guides(color=guide_legend(title="Data")) +
   theme_bw() +
   theme(legend.key.size = unit(1, 'line'), #change legend key size
@@ -638,15 +638,15 @@ plot_curve_age <- ggplot() +
         axis.text.x = element_text(size=15, color="black"))
 
 plot_curves_len <- ggplot() +
-  geom_line(data=pred_seq1_length0, aes(x=logGeneLen, y=LOF, color="Probability\nloss of function"), linewidth=1) +
-  geom_line(data=pred_seq1_length5, aes(x=logGeneLen, y=LOF, color="Probability\nloss of function"), linewidth=1) +
-  geom_line(data=pred_seq1_length10, aes(x=logGeneLen, y=LOF, color="Probability\nloss of function"), linewidth=1) +
-  geom_line(data=pred_seq1_length15, aes(x=logGeneLen, y=LOF, color="Probability\nloss of function"), linewidth=1) +
-  geom_line(data=pred_seq1_length20, aes(x=logGeneLen, y=LOF, color="Probability\nloss of function"), linewidth=1) +
-  scale_color_manual(values = "black", limits="Probability\nloss of function") +
+  geom_line(data=pred_seq1_length0, aes(x=logGeneLen, y=LOF, color="Probability of\nnon-functionality"), linewidth=1) +
+  geom_line(data=pred_seq1_length5, aes(x=logGeneLen, y=LOF, color="Probability of\nnon-functionality"), linewidth=1) +
+  geom_line(data=pred_seq1_length10, aes(x=logGeneLen, y=LOF, color="Probability of\nnon-functionality"), linewidth=1) +
+  geom_line(data=pred_seq1_length15, aes(x=logGeneLen, y=LOF, color="Probability of\nnon-functionality"), linewidth=1) +
+  geom_line(data=pred_seq1_length20, aes(x=logGeneLen, y=LOF, color="Probability of\nnon-functionality"), linewidth=1) +
+  scale_color_manual(values = "black", limits="Probability of\nnon-functionality") +
   scale_x_continuous(breaks=c(2, 2.5, 3, 3.5, 4, 4.5), limits=c(2, 4.5)) +
   scale_y_continuous(breaks=c(0, 0.2, 0.4, 0.6, 0.8, 1), limits = c(0, 1)) +
-  labs(x =expression("log"[10]*"(Gene length)"), y = expression(atop("Probability", "loss of function")), title = NULL) +
+  labs(x =expression("log"[10]*"(Gene length)"), y = expression(atop("Probability of", "non-functionality")), title = NULL) +
   annotate(geom="text", x=c(4.25, 3.9, 3.25, 2.8, 2.25) , y=c(0.16, 0.36, 0.65, 0.90, 0.97), label=c("Age = 0 MG", "Age = 5 MG", "Age = 10 MG", "Age = 15 MG", "Age = 20 MG"), color="Black", size=4) +
   guides(color=guide_legend(title="Data")) +
   theme_bw() +
@@ -664,16 +664,16 @@ plot_curves_len <- ggplot() +
         axis.text.x = element_text(size=15, color="black"))
 
 plot_curves_phap <- ggplot() +
-  geom_line(data=pred_seq1_pHaplo0, aes(x=pHaplo, y=LOF, color="Probability\nloss of function"), linewidth=1) +
-  geom_line(data=pred_seq1_pHaplo5, aes(x=pHaplo, y=LOF, color="Probability\nloss of function"), linewidth=1) +
-  geom_line(data=pred_seq1_pHaplo10, aes(x=pHaplo, y=LOF, color="Probability\nloss of function"), linewidth=1) +
-  geom_line(data=pred_seq1_pHaplo15, aes(x=pHaplo, y=LOF, color="Probability\nloss of function"), linewidth=1) +
-  geom_line(data=pred_seq1_pHaplo20, aes(x=pHaplo, y=LOF, color="Probability\nloss of function"), linewidth=1) +
-  geom_vline(aes(xintercept=-1, color="95% probability\nloss of function"), linewidth=1, linetype=2) +
-  scale_color_manual(values = "black", limits="Probability\nloss of function") +
+  geom_line(data=pred_seq1_pHaplo0, aes(x=pHaplo, y=LOF, color="Probability of\nnon-functionality"), linewidth=1) +
+  geom_line(data=pred_seq1_pHaplo5, aes(x=pHaplo, y=LOF, color="Probability of\nnon-functionality"), linewidth=1) +
+  geom_line(data=pred_seq1_pHaplo10, aes(x=pHaplo, y=LOF, color="Probability of\nnon-functionality"), linewidth=1) +
+  geom_line(data=pred_seq1_pHaplo15, aes(x=pHaplo, y=LOF, color="Probability of\nnon-functionality"), linewidth=1) +
+  geom_line(data=pred_seq1_pHaplo20, aes(x=pHaplo, y=LOF, color="Probability of\nnon-functionality"), linewidth=1) +
+  geom_vline(aes(xintercept=-1, color="95% Probability of\nnon-functionality"), linewidth=1, linetype=2) +
+  scale_color_manual(values = "black", limits="Probability of\nnon-functionality") +
   scale_x_continuous(breaks=c(0, 0.2, 0.4, 0.6, 0.8, 1), limits = c(0, 1)) +
   scale_y_continuous(breaks=c(0, 0.2, 0.4, 0.6, 0.8, 1), limits = c(0, 1)) +
-  labs(x = "pHaplo (probability)", y = expression(atop("Probability", "loss of function")), title = NULL) +
+  labs(x = "pHaplo (probability)", y = expression(atop("Probability of", "non-functionality")), title = NULL) +
   annotate(geom="text", x=c(0.39, 0.52, 0.65, 0.78, 0.92) , y=c(0.01, 0.19, 0.55, 0.78, 0.90), label=c("Age = 0 MG", "Age = 5 MG", "Age = 10 MG", "Age = 15 MG", "Age = 20 MG"), color="Black", size=4) +
   guides(color=guide_legend(title="Data")) +
   theme_bw() +
@@ -693,23 +693,23 @@ plot_curves_phap <- ggplot() +
 
 
 
-odds_ratios_df$Variable <- c("Intercept***", "log10(Gene length)***", "pHaplo", "Species.Raso lark", "Age generations***",
-                             "log10(Gene length):pHaplo*", "log10(Gene length):Age generations**", "pHaplo:Age generations***", 
-                             "Species.Raso lark:Age generations", "log10(Gene length):Species.Raso lark", "pHaplo:Species.Raso lark")
+odds_ratios_df$Variable <- c("Intercept ***", "log10(Gene length) ***", "pHaplo", "Species (Raso lark)", "Strata age ***",
+                             "log10(Gene length) * pHaplo *", "log10(Gene length) * Strata age **", "pHaplo * Strata age ***", 
+                             "Species (Raso lark) * Strata age", "log10(Gene length) * Species (Raso lark)", "pHaplo * Species (Raso lark)")
 
 
 
 odds_ratios_df$Variable <- factor(odds_ratios_df$Variable, order=T,
-                                  levels=c("Intercept***", "log10(Gene length)***", "pHaplo", "Species.Raso lark", "Age generations***",
-                                           "log10(Gene length):pHaplo*", "log10(Gene length):Species.Raso lark", 
-                                           "log10(Gene length):Age generations**", "pHaplo:Species.Raso lark",
-                                           "pHaplo:Age generations***", "Species.Raso lark:Age generations"))
+                                  levels=c("Intercept ***", "log10(Gene length) ***", "pHaplo", "Species (Raso lark)", "Strata age ***",
+                                           "log10(Gene length) * pHaplo *", "log10(Gene length) * Species (Raso lark)", 
+                                           "log10(Gene length) * Strata age **", "pHaplo * Species (Raso lark)",
+                                           "pHaplo * Strata age ***", "Species (Raso lark) * Strata age"))
 
 
 odds_ratios_df$logOdds_Ratio <- log10(odds_ratios_df$Odds_Ratio)
 odds_ratios_df$logLower_CI <- log10(odds_ratios_df$Lower_CI)
 odds_ratios_df$logUpper_CI <- log10(odds_ratios_df$Upper_CI)
-odds_ratios_df <- odds_ratios_df[which(odds_ratios_df$Variable != "Intercept***"),]
+odds_ratios_df <- odds_ratios_df[which(odds_ratios_df$Variable != "Intercept ***"),]
 odds_ratios_df <- odds_ratios_df[order(odds_ratios_df$Variable),]
 odds_ratios_df$contVar <- rev(1:nrow(odds_ratios_df))
 
