@@ -262,7 +262,7 @@ plot_curves_len_phap <- ggplot() +
   annotate(geom="text", x=c(3.90, 4.0, 4.05, 4.1, 4.15, 4.2) , y=c(0.33, 0.27, 0.215, 0.164, 0.125, 0.09), label=c("pHaplo = 0.0", "pHaplo = 0.2", "pHaplo = 0.4", "pHaplo = 0.6", "pHaplo = 0.8", "pHaplo = 1.0"), color="Black", size=4) +
   scale_x_continuous(expand = c(0.05,0.05), breaks=c(2.5, 3.0, 3.5, 4.0, 4.5)) +
   scale_y_continuous(expand = c(0,0), limits=c(0.0, 0.4), breaks=c(0.0, 0.1, 0.2, 0.3, 0.4)) +
-  guides(color=guide_legend(title="Data")) +
+  guides(color=guide_legend(title="Functionality")) +
   theme_bw() +
   theme(legend.position= "none",
         panel.spacing = unit(0, "lines"),
@@ -285,15 +285,15 @@ dev.off()
 #W degeneration and Z selection
 
 
-data_deg4$Wdegeneration2 <- factor(data_deg4$Wdegeneration, order=T, labels=c("PAR", "W functional", "W loss of function", "W degenerated"),  levels=c("PAR", "W_functional", "W_loss_of_function", "W_degenerated"))
+data_deg4$Wdegeneration2 <- factor(data_deg4$Wdegeneration, order=T, labels=c("PAR", "W functional", "W loss-of-function mutation", "W exon loss"),  levels=c("PAR", "W_functional", "W_loss_of_function", "W_degenerated"))
 
 plot_Zsel <- ggplot() +
   geom_violin(data=data_deg4, aes(x=Wdegeneration2, y=FullDNDS_DOS, group=Wdegeneration2, fill=Wdegeneration2), color="black", width=0.8, position=position_dodge(1)) +
   geom_boxplot(data=data_deg4, aes(x=Wdegeneration2, y=FullDNDS_DOS, group=Wdegeneration2, fill=Wdegeneration2), color="black", width=0.1, position=position_dodge(1)) +
-  scale_fill_manual(name="W degeneration", values = c("PAR"="#404040", "W functional"="#E4EAF0", "W degenerated"="#b30000", "W loss of function"="#fecc5c")) +
+  scale_fill_manual(name="W degeneration", values = c("PAR"="#404040", "W functional"="#E4EAF0", "W exon loss"="#b30000", "W loss-of-function mutation"="#fecc5c")) +
   scale_y_continuous(expand = c(0,0), limits=c(0,1), breaks=c(0.0, 0.25, 0.50, 0.75, 1.0)) +
   labs(y=expression(atop("dN/(dN+dS)", "PAR and Z-gametologs")), x="Functionality", title = NULL) +
-  guides(color=guide_legend(title="Data")) +
+  guides(color=guide_legend(title="Functionality")) +
   theme_bw() +
   theme(legend.position= "none",
         panel.spacing = unit(0, "lines"),
@@ -308,15 +308,15 @@ plot_Zsel <- ggplot() +
         axis.text.x = element_text(size=15, color="black", angle = 20, vjust=0.5),
         axis.ticks.y.left = element_blank())
 
-pred_seq2_int1$Wdegeneration <- factor(pred_seq2_int1$Wdegeneration, order=F, labels=c("Autosomal/PAR", "W functional", "W loss of function", "W degenerated"), levels=c("Autosomal/PAR", "W_functional", "W_loss_of_function", "W_degenerated"))
+pred_seq2_int1$Wdegeneration <- factor(pred_seq2_int1$Wdegeneration, order=F, labels=c("Autosomal/PAR", "W functional", "W loss-of-function mutation", "W exon loss"), levels=c("Autosomal/PAR", "W_functional", "W_loss_of_function", "W_degenerated"))
 pred_seq2_int1$Wdegeneration[which(is.na(pred_seq2_int1$Wdegeneration))] <- "Autosomal/PAR"
 
 
 plot_Zsel_interaction <- ggplot() +
   geom_line(data=pred_seq2_int1, aes(x=pHaplo, y=FullDNDS_DOS, group=Wdegeneration, color=Wdegeneration), linewidth=2, key_glyph = draw_key_rect) +
-  scale_color_manual(name="W degeneration", values = c("Autosomal/PAR"="#404040", "W functional"="#E4EAF0", "W degenerated"="#b30000", "W loss of function"="#fecc5c")) +
+  scale_color_manual(name="W degeneration", values = c("Autosomal/PAR"="#404040", "W functional"="#E4EAF0", "W exon loss"="#b30000", "W loss-of-function mutation"="#fecc5c")) +
   labs(y=expression(atop("dN/(dN+dS)", "PAR & Z-gametologs")), title = NULL) +
-  guides(color=guide_legend(title="Data"), override.aes = list(shape = 1)) +
+  guides(color=guide_legend(title="Functionality"), override.aes = list(shape = 1)) +
   #scale_y_continuous(expand = c(0,0), limits=c(0.05, 0.3), breaks=c(0.1, 0.2, 0.3)) +
   scale_x_continuous(expand = c(0,0), breaks=c(0.0, 0.25, 0.50, 0.75, 1.0)) +
   theme_bw() +
@@ -335,19 +335,19 @@ plot_Zsel_interaction <- ggplot() +
 
 
 
-effects_df$Variable <- c("Intercept***", "log10(Gene length)*", "pHaplo*", 
-                         "W degeneration.W functional", "W degeneration.W loss of function", "W degeneration.W degenerated", "log10(Gene length):pHaplo***",
-                         "log10(Gene length):W degeneration.W functional", "log10(Gene length) degeneration.W loss of function", "log10(Gene length):W degeneration.W degenerated", 
-                         "pHaplo:W degeneration.W functional", "pHaplo:W degeneration.W loss of function**", "pHaplo:W degeneration.W degenerated**",
-                         "Species.Raso lark")
+effects_df$Variable <- c("Intercept ***", "log10(Gene length)*", "pHaplo *", 
+                         "W functionality (functional)", "W functionality (loss-of-function mutation)", "W functionality (exon loss)", "log10(Gene length) * pHaplo ***",
+                         "log10(Gene length) * W functionality (functional)", "log10(Gene length) * W functionality (loss-of-function mutation)", "log10(Gene length) * W functionality (exon loss)", 
+                         "pHaplo * W functionality (functional)", "pHaplo * W functionality (loss-of-function mutation) **", "pHaplo * W functionality (exon loss) **",
+                         "Species (Raso lark)")
 
 effects_df$Variable <- factor(effects_df$Variable, order=T,
-                              levels=c("Intercept***", "log10(Gene length)*", "pHaplo*",  "Species.Raso lark",
-                                       "W degeneration.W functional", "W degeneration.W loss of function", "W degeneration.W degenerated", "log10(Gene length):pHaplo***",
-                                       "log10(Gene length):W degeneration.W functional", "log10(Gene length) degeneration.W loss of function", "log10(Gene length):W degeneration.W degenerated", 
-                                       "pHaplo:W degeneration.W functional", "pHaplo:W degeneration.W loss of function**", "pHaplo:W degeneration.W degenerated**"))
+                              levels=c("Intercept ***", "log10(Gene length) *", "pHaplo *",  "Species (Raso lark)",
+                                       "W functionality (functional)", "W functionality (loss-of-function mutation)", "W functionality (exon loss)", "log10(Gene length) * pHaplo ***",
+                                       "log10(Gene length) * W functionality (functional)", "log10(Gene length) W functionality (loss-of-function mutation)", "log10(Gene length) * W functionality (exon loss)", 
+                                       "pHaplo * W functionality (functional)", "pHaplo * W functionality (loss-of-function mutation) **", "pHaplo * W functionality (exon loss) **"))
 
-effects_df <- effects_df[which(effects_df$Variable != "Intercept***"),]
+effects_df <- effects_df[which(effects_df$Variable != "Intercept ***"),]
 effects_df <- effects_df[order(effects_df$Variable),]
 effects_df$contVar <- rev(1:nrow(effects_df))
 
@@ -380,7 +380,7 @@ data_hist4 <- data_hist4[which(data_hist4$Strata != "Autosomal"),]
 data_hist4$FullBeta_DOS <- rep(NA, nrow(data_hist4))
 data_hist4$FullAlpha_DOS <- rep(NA, nrow(data_hist4))
 data_hist4$FullDNDS_DOS <- rep(NA, nrow(data_hist4))
-data_hist4$Wdegeneration <- factor(data_hist4$Wdegeneration, order=F, labels=rev(c("PAR", "W functional", "W loss of function", "W degenerated", "W degenerated")), levels=rev(c("Autosomal/PAR", "W functional", "W loss of function", "W partially degenerated", "W degenerated")))
+data_hist4$Wdegeneration <- factor(data_hist4$Wdegeneration, order=F, labels=rev(c("PAR", "W functional", "W loss-of-function mutation", "W exon loss", "W exon loss")), levels=rev(c("Autosomal/PAR", "W functional", "W loss of function", "W partially degenerated", "W degenerated")))
 data_hist4$Strata <- factor(data_hist4$Strata, order=T, labels=rev(c("S0", "S1", "S2", "S3", "4A", "3-a", "3-b", "5", "3-c", "PAR")), levels=rev(c("S0", "S1", "S2", "S3", "4A", "3-a", "3-b", "5", "3-c", "PAR")))
 data_hist4 <- data_hist4[which(data_hist4$Filter1=="OK"),]
 data_hist4 <- data_hist4[which(!is.na(data_hist4$pHaplo)),]
@@ -407,8 +407,8 @@ plot_Zsel_strata <- ggplot() +
   geom_vline(data=medians1, aes(xintercept=0.118), color="#404040", linetype=2, linewidth=2) +
   geom_point(data=medians1, aes(x=median_value, y=Wdegeneration), color="black", size=5) +
   geom_point(data=medians1, aes(x=median_value, y=Wdegeneration, color=Wdegeneration), size=4) +
-  scale_fill_manual(name="Data", values = c("PAR"= "#404040", "W functional"="#E4EAF0", "W degenerated"="#b30000", "W loss of function"="#fecc5c")) +
-  scale_color_manual(name="Data", values = c("PAR"= "#404040", "W functional"="#E4EAF0", "W degenerated"="#b30000", "W loss of function"="#fecc5c")) +
+  scale_fill_manual(name="Functionality", values = c("PAR"= "#404040", "W functional"="#E4EAF0", "W exon loss"="#b30000", "W loss-of-function mutation"="#fecc5c")) +
+  scale_color_manual(name="Functionality", values = c("PAR"= "#404040", "W functional"="#E4EAF0", "W exon loss"="#b30000", "W loss-of-function mutation"="#fecc5c")) +
   labs(x=expression(atop("dN/(dN+dS)")), y=NULL, title = NULL) +
   scale_x_continuous(expand = c(0,0), limits=c(0, 1), breaks=c(0.0, 0.25, 0.50, 0.75, 1.0)) +
   facet_wrap(~Strata, nrow=10) +
@@ -434,8 +434,8 @@ plot_Zsel_beta <- ggplot() +
   geom_vline(data=medians2, aes(xintercept=log10(0.0290)), color="#404040", linetype=2, linewidth=2) +
   geom_point(data=medians2, aes(x=log10(median_value), y=Wdegeneration), color="black", size=5) +
   geom_point(data=medians2, aes(x=log10(median_value), y=Wdegeneration, color=Wdegeneration), size=4) +
-  scale_fill_manual(name="Data", values = c("PAR"= "#404040", "W functional"="#E4EAF0", "W degenerated"="#b30000", "W loss of function"="#fecc5c")) +
-  scale_color_manual(name="Data", values = c("PAR"= "#404040", "W functional"="#E4EAF0", "W degenerated"="#b30000", "W loss of function"="#fecc5c")) +
+  scale_fill_manual(name="Functionality", values = c("PAR"= "#404040", "W functional"="#E4EAF0", "W exon loss"="#b30000", "W loss-of-function mutation"="#fecc5c")) +
+  scale_color_manual(name="Functionality", values = c("PAR"= "#404040", "W functional"="#E4EAF0", "W exon loss"="#b30000", "W loss-of-function mutation"="#fecc5c")) +
   labs(x=expression(atop("log"[10]*"(dN)", "PAR and Z-gametologs")), y=NULL, title = NULL) +
   scale_x_continuous(expand = c(0,0), limits=c(-3.5, 0)) +
   facet_wrap(~Strata, nrow=10, strip.position = "left") +
@@ -464,8 +464,8 @@ plot_Zsel_alpha <- ggplot() +
   geom_vline(data=medians3, aes(xintercept=log10(0.201)), color="#404040", linetype=2, linewidth=2) +
   geom_point(data=medians3, aes(x=log10(median_value), y=Wdegeneration), color="black", size=5) +
   geom_point(data=medians3, aes(x=log10(median_value), y=Wdegeneration, color=Wdegeneration), size=4) +
-  scale_fill_manual(name="Data", values = c("PAR"= "#404040", "W functional"="#E4EAF0", "W degenerated"="#b30000", "W loss of function"="#fecc5c"), breaks=c("PAR", "W functional", "W loss of function", "W degenerated")) +
-  scale_color_manual(name="Data", values = c("PAR"= "#404040", "W functional"="#E4EAF0", "W degenerated"="#b30000", "W loss of function"="#fecc5c")) +
+  scale_fill_manual(name="Functionality", values = c("PAR"= "#404040", "W functional"="#E4EAF0", "W exon loss"="#b30000", "W loss-of-function mutation"="#fecc5c"), breaks=c("PAR", "W functional", "W loss-of-function mutation", "W exon loss")) +
+  scale_color_manual(name="Functionality", values = c("PAR"= "#404040", "W functional"="#E4EAF0", "W exon loss"="#b30000", "W loss-of-function mutation"="#fecc5c")) +
   labs(x=expression(atop("log"[10]*"(dS)")), y=NULL, title = NULL) +
   scale_x_continuous(expand = c(0,0), limits=c(-3.5, 0)) +
   guides(color="none") +
@@ -488,11 +488,10 @@ plot_Zsel_alpha <- ggplot() +
         axis.text.x = element_text(size=15, color="black"),
         axis.ticks.y.left = element_blank())
 
-fig4_plot <- (plot_Zsel_alpha | plot_Zsel_beta | plot_Zsel_strata | (plot_Zsel/plot_Zsel_interaction/plot_Zsel_effects)) + plot_layout(guides = "collect", axis_titles = "collect", widths = c(1, 1, 1, 2)) +
-  plot_annotation(tag_levels = 'A') & theme(plot.tag = element_text(size = 20, face="bold"), plot.tag.position=c(-0.02,1), plot.margin=margin(20,20,20,20))
+fig4_plot <- (plot_Zsel_alpha | plot_Zsel_beta | plot_Zsel_strata | (plot_Zsel/plot_Zsel_interaction/plot_Zsel_effects)) + plot_layout(guides = "collect", axis_titles = "collect", widths = c(1, 1, 1, 2.3)) +
+  plot_annotation(tag_levels = 'A') & theme(plot.tag = element_text(size = 20, face="bold"), plot.tag.position=c(-0.025,1), plot.margin=margin(20,20,20,20))
 
 
 jpeg("Figures/Figure4.jpg", width=8500, height=7000, res=300)
 fig4_plot
 dev.off()
-
