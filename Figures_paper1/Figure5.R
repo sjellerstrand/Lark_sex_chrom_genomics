@@ -349,8 +349,8 @@ dev.off()
 ## Main plots
 #W degeneration and Z selection
 
-data_deg5$Wdegeneration2 <- factor(data_deg5$Wdegeneration, order=T, labels=c("W functional", "W loss of function"),  levels=c("W_functional", "W_loss_of_function"))
-pred_seq_age_wdeg$Wdegeneration <- factor(pred_seq_age_wdeg$Wdegeneration, order=T, labels=c("W functional", "W loss of function"),  levels=c("W_functional", "W_loss_of_function"))
+data_deg5$Wdegeneration2 <- factor(data_deg5$Wdegeneration, order=T, labels=c("W functional", "W loss-of-function mutation"),  levels=c("W_functional", "W_loss_of_function"))
+pred_seq_age_wdeg$Wdegeneration <- factor(pred_seq_age_wdeg$Wdegeneration, order=T, labels=c("W functional", "W loss-of-function mutation"),  levels=c("W_functional", "W_loss_of_function"))
 
 plot_zsel <- ggplot() +
   geom_point(data=data_deg5, aes(x=SexLinkedDNDS_DOSZ, y=SexLinkedDNDS_DOSW), size=1.5, alpha=0.4) +
@@ -376,11 +376,11 @@ plot_zsel <- ggplot() +
 plot_age_wdeg_int <- ggplot() +
   geom_jitter(data=data_deg5, aes(x=Strata_Age_Generations, y=SexLinkedDNDS_DOSW, group=Wdegeneration2, color=Wdegeneration2), size=2, height=0, width=0.05) +
   geom_line(data=pred_seq_age_wdeg, aes(x=Strata_Age_Generations, y=Wsel, group=Wdegeneration, color=Wdegeneration), linewidth=2, linetype=1) +
-  scale_color_manual(name="Data", values = c("W functional"="#E4EAF0", "W loss of function"="#fecc5c")) +
+  scale_color_manual(name="Functionality", values = c("W functional"="#E4EAF0", "W loss-of-function mutation"="#fecc5c")) +
   geom_hline(aes(yintercept=median(data_deg5$SexLinkedDNDS_DOSZ)), color="#404040", linewidth=1, linetype=2) +
   scale_x_continuous(expand = c(0,0), limits=c(2,8), breaks=c(2, 4, 6, 8)) +
   scale_y_continuous(expand = c(0,0), limits=c(0,1), breaks=c(0.0, 0.25, 0.50, 0.75, 1.0)) +
-  annotate(geom="text", x=rev(sort(unique(data_deg5$Strata_Age_Generations))), y=c(0.71, 0.71, 0.71, 0.71), label=rev(c("3-c", "5", "3-b", "3-a & 4A")), color="Black", size=5) +
+  annotate(geom="text", x=rev(sort(unique(data_deg5$Strata_Age_Generations))), y=c(0.71, 0.71, 0.71, 0.71), label=rev(c("3-c", "5", "3-b", "3-a\n&\n4A")), color="Black", size=5) +
   labs(x=expression(atop("Age (million generations)")), y=expression(atop("dN/(dN+dS)", "W-gametologs")), title = NULL) +
   theme_bw() +
   theme(legend.position= "none",
@@ -399,18 +399,18 @@ plot_age_wdeg_int <- ggplot() +
 
 
 
-effects_df$Variable <- c("Intercept", "log10(Gene length)*", "pHaplo*", "Z-selection*", "Age generations", "W degeneration.W loss of function",
-                         "log10(Gene length):Z-selection*",  "pHaplo:Z-selection**", "pHaplo:Age generations", "Age generations:W degeneration.W loss of function**",
-                         "Age generations:Z-selection", "Species.Raso lark", "Species.Raso lark:Z-selection", "log10(Gene length):Age generations",
-                         "Species.Raso lark:W degeneration.W loss of function", "pHaplo:W degeneration.W loss of function", 
-                         "log10(Gene length):W degeneration.W loss of function", "Z-selection:W degeneration.W loss of function", "log10(Gene length):pHaplo")
+effects_df$Variable <- c("Intercept", "log10(Gene length) *", "pHaplo *", "Z selection *", "Strata age", "W functionality (loss-of-function mutation)",
+                         "log10(Gene length) * Z selection *",  "pHaplo * Z selection **", "pHaplo * Strata age", "Strata age * W functionality (loss-of-function mutation) **",
+                         "Strata age * Z selection", "Species (Raso lark)", "Species (Raso lark) * Z selection", "log10(Gene length) * Strata age",
+                         "Species (Raso lark) * W functionality (loss-of-function mutation)", "pHaplo * W functionality (loss-of-function mutation)", 
+                         "log10(Gene length) * W functionality (loss-of-function mutation)", "Z selection * W functionality (loss-of-function mutation)", "log10(Gene length) * pHaplo")
 
 effects_df$Variable <- factor(effects_df$Variable, order=T,
-                              levels=c("Intercept", "log10(Gene length)*", "pHaplo*", "Species.Raso lark", "Age generations", "Z-selection*",  "W degeneration.W loss of function",
-                                       "log10(Gene length):pHaplo", "log10(Gene length):Age generations", "log10(Gene length):Z-selection*", "log10(Gene length):W degeneration.W loss of function",
-                                       "pHaplo:Age generations", "pHaplo:Z-selection**", "pHaplo:W degeneration.W loss of function", "Species.Raso lark:Z-selection",
-                                       "Species.Raso lark:W degeneration.W loss of function", "Age generations:Z-selection", "Age generations:W degeneration.W loss of function**",
-                                        "Z-selection:W degeneration.W loss of function"))
+                              levels=c("Intercept", "log10(Gene length) *", "pHaplo *", "Species (Raso lark)", "Strata age", "Z selection *",  "W functionality (loss-of-function mutation)",
+                                       "log10(Gene length) * pHaplo", "log10(Gene length) * Strata age", "log10(Gene length) * Z selection *", "log10(Gene length) * W functionality (loss-of-function mutation)",
+                                       "pHaplo * Strata age", "pHaplo * Z selection **", "pHaplo * W functionality (loss-of-function mutation)", "Species (Raso lark) * Z selection",
+                                       "Species (Raso lark) * W functionality (loss-of-function mutation)", "Strata age * Z selection", "Strata age * W functionality (loss-of-function mutation) **",
+                                        "Z selection * W functionality (loss-of-function mutation)"))
 
 effects_df <- effects_df[which(effects_df$Variable != "Intercept"),]
 effects_df <- effects_df[order(effects_df$Variable),]
@@ -443,7 +443,7 @@ data_hist5 <- data_deg
 data_hist5$SexLinkedBeta_DOS <- rep(NA, nrow(data_hist5))
 data_hist5$SexLinkedAlpha_DOS <- rep(NA, nrow(data_hist5))
 data_hist5$SexLinkedDNDS_DOS <- rep(NA, nrow(data_hist5))
-data_hist5$Wdegeneration <- factor(data_hist5$Wdegeneration, order=F, labels=rev(c("Z-gametologs", "W functional", "W loss of function", "W degenerated", "W degenerated")), levels=rev(c("Z-gametologs", "W functional", "W loss of function", "W partially degenerated", "W degenerated")))
+data_hist5$Wdegeneration <- factor(data_hist5$Wdegeneration, order=F, labels=rev(c("Z-gametologs", "W functional", "W loss-of-function mutation", "W degenerated", "W degenerated")), levels=rev(c("Z-gametologs", "W functional", "W loss of function", "W partially degenerated", "W degenerated")))
 data_hist5$Strata <-  factor(data_hist5$Strata, order=T, labels=rev(c("4A", "3-a", "3-b", "5", "3-c")), levels=rev(c("4A", "3-a", "3-b", "5", "3-c")))
 data_hist5 <- data_hist5[which(data_hist5$Filter1=="OK"),]
 data_hist5 <- data_hist5[which(!is.na(data_hist5$pHaplo)),]
@@ -481,15 +481,15 @@ data_hist5$SexLinkedAlpha_DOS[(1+nrow(data_hist5)/2):nrow(data_hist5)] <- data_h
 medians1 <- data_hist5 |> group_by(Strata, Wdegeneration) |> summarize(median_value = median(SexLinkedDNDS_DOS), .groups = 'drop')
 medians_Z1 <- medians1[which(medians1$Wdegeneration == "Z-gametologs"),] |> mutate(next_median_value = lead(median_value), next_Strata = lead(Strata)) |> filter(!is.na(next_median_value)) 
 medians_Wf1 <- medians1[which(medians1$Wdegeneration == "W functional"),] |> mutate(next_median_value = lead(median_value), next_Strata = lead(Strata)) |> filter(!is.na(next_median_value)) 
-medians_Wl1 <- medians1[which(medians1$Wdegeneration == "W loss of function"),] |> mutate(next_median_value = lead(median_value), next_Strata = lead(Strata)) |> filter(!is.na(next_median_value)) 
+medians_Wl1 <- medians1[which(medians1$Wdegeneration == "W loss-of-function mutation"),] |> mutate(next_median_value = lead(median_value), next_Strata = lead(Strata)) |> filter(!is.na(next_median_value)) 
 
 
 plot_Wsel_strata <- ggplot() +
   geom_density_ridges(data=data_hist5, aes(x=SexLinkedDNDS_DOS, y=Wdegeneration, fill=Wdegeneration), stat="binline", bins=20, alpha=1, scale=2, draw_baseline = FALSE) +
   geom_point(data=medians1, aes(x=median_value, y=Wdegeneration), color="black", size=5) +
   geom_point(data=medians1, aes(x=median_value, y=Wdegeneration, color=Wdegeneration), size=4) +
-  scale_fill_manual(name="Data", values = c("Z-gametologs"= "#404040", "W functional"="#E4EAF0", "W loss of function"="#fecc5c")) +
-  scale_color_manual(name="Data", values = c("Z-gametologs"= "#404040", "W functional"="#E4EAF0", "W loss of function"="#fecc5c")) +
+  scale_fill_manual(name="Functionality", values = c("Z-gametologs"= "#404040", "W functional"="#E4EAF0", "W loss-of-function mutation"="#fecc5c")) +
+  scale_color_manual(name="Functionality", values = c("Z-gametologs"= "#404040", "W functional"="#E4EAF0", "W loss-of-function mutation"="#fecc5c")) +
   labs(x=expression(atop("dN/(dN+dS)")), y=NULL, title = NULL) +
   scale_x_continuous(expand = c(0,0), limits=c(0, 1), breaks=c(0.0, 0.25, 0.50, 0.75, 1.0)) +
   facet_wrap(~Strata, nrow=5) +
@@ -511,15 +511,15 @@ plot_Wsel_strata <- ggplot() +
 medians2 <- data_hist5 |> group_by(Strata, Wdegeneration) |> summarize(median_value = median(SexLinkedBeta_DOS), .groups = 'drop')
 medians_Z2 <- medians2[which(medians2$Wdegeneration == "Z-gametologs"),] |> mutate(next_median_value = lead(median_value), next_Strata = lead(Strata)) |> filter(!is.na(next_median_value)) 
 medians_Wf2 <- medians2[which(medians2$Wdegeneration == "W functional"),] |> mutate(next_median_value = lead(median_value), next_Strata = lead(Strata)) |> filter(!is.na(next_median_value)) 
-medians_Wl2 <- medians2[which(medians2$Wdegeneration == "W loss of function"),] |> mutate(next_median_value = lead(median_value), next_Strata = lead(Strata)) |> filter(!is.na(next_median_value)) 
+medians_Wl2 <- medians2[which(medians2$Wdegeneration == "W loss-of-function mutation"),] |> mutate(next_median_value = lead(median_value), next_Strata = lead(Strata)) |> filter(!is.na(next_median_value)) 
 
 
 plot_Wsel_beta <- ggplot() +
   geom_density_ridges(data=data_hist5, aes(x=log10(SexLinkedBeta_DOS), y=Wdegeneration, fill=Wdegeneration), stat="binline", bins=20, alpha=1, scale=2, draw_baseline = FALSE) +
   geom_point(data=medians2, aes(x=log10(median_value), y=Wdegeneration), color="black", size=5) +
   geom_point(data=medians2, aes(x=log10(median_value), y=Wdegeneration, color=Wdegeneration), size=4) +
-  scale_fill_manual(name="Data", values = c("Z-gametologs"= "#404040", "W functional"="#E4EAF0", "W loss of function"="#fecc5c")) +
-  scale_color_manual(name="Data", values = c("Z-gametologs"= "#404040", "W functional"="#E4EAF0", "W loss of function"="#fecc5c")) +
+  scale_fill_manual(name="Functionality", values = c("Z-gametologs"= "#404040", "W functional"="#E4EAF0", "W loss-of-function mutation"="#fecc5c")) +
+  scale_color_manual(name="Functionality", values = c("Z-gametologs"= "#404040", "W functional"="#E4EAF0", "W loss-of-function mutation"="#fecc5c")) +
   labs(x=expression(atop("log"[10]*"(dN)", "Z- and W-gametologs")), y=NULL, title = NULL) +
   scale_x_continuous(expand = c(0,0), limits=c(-3, 0)) +
   facet_wrap(~Strata, nrow=5, strip.position = "left") +
@@ -542,15 +542,15 @@ plot_Wsel_beta <- ggplot() +
 medians3 <- data_hist5 |> group_by(Strata, Wdegeneration) |> summarize(median_value = median(SexLinkedAlpha_DOS), .groups = 'drop')
 medians_Z3 <- medians3[which(medians3$Wdegeneration == "Z-gametologs"),] |> mutate(next_median_value = lead(median_value), next_Strata = lead(Strata)) |> filter(!is.na(next_median_value)) 
 medians_Wf3 <- medians3[which(medians3$Wdegeneration == "W functional"),] |> mutate(next_median_value = lead(median_value), next_Strata = lead(Strata)) |> filter(!is.na(next_median_value)) 
-medians_Wl3 <- medians3[which(medians3$Wdegeneration == "W loss of function"),] |> mutate(next_median_value = lead(median_value), next_Strata = lead(Strata)) |> filter(!is.na(next_median_value)) 
+medians_Wl3 <- medians3[which(medians3$Wdegeneration == "W loss-of-function mutation"),] |> mutate(next_median_value = lead(median_value), next_Strata = lead(Strata)) |> filter(!is.na(next_median_value)) 
 
 
 plot_Wsel_alpha <- ggplot() +
   geom_density_ridges(data=data_hist5, aes(x=log10(SexLinkedAlpha_DOS), y=Wdegeneration, fill=Wdegeneration), stat="binline", bins=20, alpha=1, scale=2, draw_baseline = FALSE) +
   geom_point(data=medians3, aes(x=log10(median_value), y=Wdegeneration), color="black", size=5) +
   geom_point(data=medians3, aes(x=log10(median_value), y=Wdegeneration, color=Wdegeneration), size=4) +
-  scale_fill_manual(name="Data", values = c("Z-gametologs"= "#404040", "W functional"="#E4EAF0", "W loss of function"="#fecc5c"), breaks=c("Z-gametologs", "W functional", "W loss of function")) +
-  scale_color_manual(name="Data", values = c("Z-gametologs"= "#404040", "W functional"="#E4EAF0", "W loss of function"="#fecc5c")) +
+  scale_fill_manual(name="Functionality", values = c("Z-gametologs"= "#404040", "W functional"="#E4EAF0", "W loss-of-function mutation"="#fecc5c"), breaks=c("Z-gametologs", "W functional", "W loss-of-function mutation")) +
+  scale_color_manual(name="Functionality", values = c("Z-gametologs"= "#404040", "W functional"="#E4EAF0", "W loss-of-function mutation"="#fecc5c")) +
   labs(x=expression(atop("log"[10]*"(dS)")), y=NULL, title = NULL) +
   scale_x_continuous(expand = c(0,0), limits=c(-3, 0)) +
   guides(color="none") +
@@ -573,8 +573,8 @@ plot_Wsel_alpha <- ggplot() +
         axis.text.x = element_text(size=15, color="black"),
         axis.ticks.y.left = element_blank())
 
-fig5_plot <- (plot_Wsel_alpha | plot_Wsel_beta | plot_Wsel_strata | (plot_zsel / plot_age_wdeg_int / plot_Wsel_effects)) + plot_layout(guides = "collect", axis_titles = "collect", widths = c(1, 1, 1, 2)) +
-  plot_annotation(tag_levels = 'A') & theme(plot.tag = element_text(size = 20, face="bold"), plot.tag.position=c(-0.02,1), plot.margin=margin(20,20,20,20))
+fig5_plot <- (plot_Wsel_alpha | plot_Wsel_beta | plot_Wsel_strata | (plot_zsel / plot_age_wdeg_int / plot_Wsel_effects)) + plot_layout(guides = "collect", axis_titles = "collect", widths = c(1, 1, 1, 2.3)) +
+  plot_annotation(tag_levels = 'A') & theme(plot.tag = element_text(size = 20, face="bold"), plot.tag.position=c(-0.025,1), plot.margin=margin(20,20,20,20))
 
 
 jpeg("Figures/Figure5.jpg", width=8500, height=7000, res=300)
