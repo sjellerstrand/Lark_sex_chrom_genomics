@@ -59,7 +59,7 @@ data2$mid <- as.numeric(data2$start + (data2$end - data2$start + 1)/2)
 data2$chr <- factor(data2$chr, levels=chrom_names$name)
 data2$diff <- as.numeric(data2$diff)
 data2$mid <- as.numeric(data2$mid)
-data2$data <- "Heterozygosity"
+data2$data <- "Sex heterozygosity\ndifference"
 data2$CumPos <- rep(NA, nrow(data2))
 for(i in 1:nrow(chrom_names)) {
   data2$CumPos[which(data2$chr == chrom_names$name[i])] <-  data2$mid[which(data2$chr == chrom_names$name[i])] + + chrom_names$start[i]
@@ -72,7 +72,7 @@ data3$mid <- as.numeric(data3$start + (data3$end - data3$start + 1)/2)
 data3$chr <- factor(data3$chr, levels=chrom_names$name)
 data3$diff <- as.numeric(data3$diff)
 data3$mid <- as.numeric(data3$mid)
-data3$data <- "Sequencing depth"
+data3$data <- "Sex sequencing\ndepth difference"
 data3$CumPos <- rep(NA, nrow(data3))
 for(i in 1:nrow(chrom_names)) {
   data3$CumPos[which(data3$chr == chrom_names$name[i])] <-  data3$mid[which(data3$chr == chrom_names$name[i])] + chrom_names$start[i]
@@ -108,7 +108,7 @@ data5$mid <- as.numeric(data5$start + (data5$end - data5$start + 1)/2)
 data5$chr <- factor(data5$chr, levels=chrom_names$name)
 data5$diff <- as.numeric(data5$diff)
 data5$mid <- as.numeric(data5$mid)
-data5$data <- "Heterozygosity"
+data5$data <- "Sex heterozygosity\ndifference"
 data5$CumPos <- rep(NA, nrow(data5))
 for(i in 1:nrow(chrom_names)) {
   data5$CumPos[which(data5$chr == chrom_names$name[i])] <-  data5$mid[which(data5$chr == chrom_names$name[i])] + chrom_names$start[i]
@@ -121,7 +121,7 @@ data6$mid <- as.numeric(data6$start + (data6$end - data6$start + 1)/2)
 data6$chr <- factor(data6$chr, levels=chrom_names$name)
 data6$diff <- as.numeric(data6$diff)
 data6$mid <- as.numeric(data6$mid)
-data6$data <- "Sequencing depth"
+data6$data <- "Sex sequencing\ndepth difference"
 data6$CumPos <- rep(NA, nrow(data6))
 for(i in 1:nrow(chrom_names)) {
   data6$CumPos[which(data6$chr == chrom_names$name[i])] <-  data6$mid[which(data6$chr == chrom_names$name[i])] + chrom_names$start[i]
@@ -196,9 +196,6 @@ strata3$labels <- c("3-a", "3-b", "3-c")
 
 yposadd <- 0
 
-## Se om jag kan ta bort tvärlinjer i PhaseWY. testa högre resolution
-# ta bort utstickande bitar. Tror det är segment som sticker ut pga av curvningen i grafen
-
 plot <- ggplot() +
   # PhaseWY results
   geom_rect(data=data1reg1, aes(xmin=CumStart, ymin=7, xmax=CumEnd, ymax=8, fill=data_type)) +
@@ -213,7 +210,7 @@ plot <- ggplot() +
   geom_rect(data=data4reg2, aes(xmin=CumStart, ymin=4, xmax=CumEnd, ymax=5, fill=data_type)) +
   geom_rect(data=data1chrZ, aes(xmin=CumStart, ymin=7+yposadd, xmax=CumEnd, ymax=8+yposadd, fill=data_type)) +
   geom_rect(data=data4chrZ, aes(xmin=CumStart, ymin=4+yposadd, xmax=CumEnd, ymax=5+yposadd, fill=data_type)) +
-  scale_fill_manual(name="PhaseWY\nclassification", values = c("Autosomal"="#E4EAF0", "Sex haplotype clustering"="#fecc5c", "Sex sequencing\ndepth difference"="#b30000", "No data"="#404040", "#f03b20"),
+  scale_fill_manual(name="PhaseWY", values = c("Autosomal"="#E4EAF0", "Sex haplotype clustering"="#fecc5c", "Sex sequencing\ndepth difference"="#b30000", "No data"="#404040", "#f03b20"),
                     limits = c("Autosomal", "Sex haplotype clustering", "Sex sequencing\ndepth difference", "No data")) +
   # Findzx results bars
   geom_rect(data=data3reg1, aes(xmin=CumPos-500000, xmax=CumPos+500000, ymin=6.5, ymax=((diff/((max(data3$diff, na.rm=T)-min(data3$diff, na.rm=T))*2))+6.5), color=data), lwd=1.5) +
@@ -265,7 +262,7 @@ plot <- ggplot() +
   geom_line(data=data2chrZ, aes(x=CumPos, y=((diff/((max(data2$diff, na.rm=T)-min(data2$diff, na.rm=T))*2))+5.5+yposadd), color=data), key_glyph = "polygon", lwd=1.5) +
   geom_line(data=data6chrZ, aes(x=CumPos, y=((diff/((max(data6$diff, na.rm=T)-min(data6$diff, na.rm=T))*2))+3.5+yposadd), color=data), key_glyph = "polygon", lwd=1.5) +
   geom_line(data=data5chrZ, aes(x=CumPos, y=((diff/((max(data5$diff, na.rm=T)-min(data5$diff, na.rm=T))*2))+2.5+yposadd), color=data), key_glyph = "polygon", lwd=1.5) +
-  scale_color_manual(name="FindZX\nsex-differences", values = c("Sequencing depth"="#b30000", "Heterozygosity"="#fecc5c")) +
+  scale_color_manual(name="FindZX", values = c("Sex sequencing\ndepth difference"="#800026", "Sex heterozygosity\ndifference"="#f03b20")) +
   # Labels
   guides(fill = guide_legend(order = 1), color = guide_legend(order = 2)) +
   annotate(x=chrom_namesreg1$CumMid, label=as.factor(chrom_namesreg1$labels), y=8.75, size=12, geom="text") +
@@ -410,5 +407,3 @@ chrom_plot
 jpeg("Figures/chrom_plot.jpeg", width=5000, height=750, res=300)
 chrom_plot
 dev.off()
-  
-  
