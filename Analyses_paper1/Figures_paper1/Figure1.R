@@ -355,23 +355,35 @@ dev.off()
 struct <- as.data.frame(matrix(NA, 10, 5))
 colnames(struct) <- c("category", "size", "label", "label_height", "label_pos")
 tot_length <- 15.4 + 9.2 + 195.3 + 10.1 + 24.1
-struct[1,] <- c("prop_unk_PAR5", 15.4, "PAR 5", 2, 15.4/2)
-struct[2,] <- c("prop_PAR5", 9.2, "PAR 5", 2, 15.4 + 9.2/2)
+struct[1,] <- c("prop_unk_PAR5", 15.4, "Unverified", 2, 15.4/2)
+struct[2,] <- c("prop_PAR5", 9.2, "PAR 3", 2, 15.4 + 9.2/2)
 struct[3,] <- c("prop_5", 36.3, "5", 2, 15.4 + 9.2 + 36.3/2)
 struct[4,] <- c("prop_ancZ", 72.9, "Ancestral (S0, S1, S2, S3)", 2, 15.4 + 9.2 + 36.3 + 72.9/2)
 struct[5,] <- c("prop_4A", 9.6, "4A", 2, 15.4 + 9.2 + 36.3 + 72.9 + 9.6/2)
 struct[6,] <- c("prop_3a", 8.0, "3-a", 2, 15.4 + 9.2 + 36.3 + 72.9 + 9.6 + 8.0/2)
 struct[7,] <- c("prop_3b", 3.6, "3-b", 2, 15.4 + 9.2 + 36.3 + 72.9 + 9.6 + 8.0 + 3.6/2)
 struct[8,] <- c("prop_3c", 64.9, "3-c", 2, 15.4 + 9.2 + 36.3 + 72.9 + 9.6 + 8.0 + 3.6 + 64.9/2)
-struct[9,] <- c("prop_PAR3", 10.1, "PAR 3", 2, 15.4 + 9.2 + 36.3 + 72.9 + 9.6 + 8.0 + 3.6 + 64.9 + 10.1/2)
-struct[10,] <- c("prop_unk_PAR3", 24.1, "PAR 3", 2, 15.4 + 9.2 + 36.3 + 72.9 + 9.6 + 8.0 + 3.6 + 64.9 + 10.1 + 24.1/2)
+struct[9,] <- c("prop_PAR3", 10.1, "PAR 5", 2, 15.4 + 9.2 + 36.3 + 72.9 + 9.6 + 8.0 + 3.6 + 64.9 + 10.1/2)
+struct[10,] <- c("prop_unk_PAR3", 24.1, "Unverified", 2, 15.4 + 9.2 + 36.3 + 72.9 + 9.6 + 8.0 + 3.6 + 64.9 + 10.1 + 24.1/2)
 
 struct$category <- factor(struct$category, order=T, levels = struct$category)  # Ensure factor levels
 struct$size <- as.numeric(struct$size)
-struct$label_height <- as.numeric(0.5)
-struct$label_height[5] <- struct$label_height[6] - 1.1
-struct$label_height[7] <- struct$label_height[6] - 1.1
+struct$label_height <- as.numeric(2.5)
+struct$label_bottom <- struct$label_height
+struct$label_bottom[5] <- struct$label_bottom[5] - 2.3
+struct$label_bottom[7] <- struct$label_bottom[7] - 2.3
 struct$tick <- struct$label_height + 0.15
+struct$tick_bottom <- struct$tick
+struct$tick_bottom[5] <- struct$tick_bottom[5] - 2.3
+struct$tick_bottom[7] <- struct$tick_bottom[7] - 2.3
+struct$label_height[2] <- struct$label_height[2] + 1.6
+struct$label_height[5] <- struct$label_height[5] + 1.6
+struct$label_height[7] <- struct$label_height[7] + 1.6
+struct$label_height[9] <- struct$label_height[9] + 1.6
+struct$tick[2] <- struct$tick[2] + 1.6
+struct$tick[5] <- struct$tick[5] + 1.6
+struct$tick[7] <- struct$tick[7] + 1.6
+struct$tick[9] <- struct$tick[9] + 1.6
 struct$label_pos <- as.numeric(struct$label_pos)/tot_length
 struct$value <- struct$size/tot_length
 struct$label2 <- paste(as.character(struct$size), "Mb", sep=" ")
@@ -382,28 +394,34 @@ struct$age <- c(NA, NA, "10.2 MY", "40.3 - 135.3 MY", "22 MY", "22 MY", "19.7 MY
 struct$age2 <- as.numeric( c(0, 0, 10.2, 87.8, 22, 22, 19.7, 6.3, 0, 0))
 
 struct$value_norm <- rescale(struct$age2, to = c(0,1))
-grad_pal <- gradient_n_pal(c("white", "gray30"))
+#grad_pal <- gradient_n_pal(c("#f7fbff", "#08306b"))
 struct$color_hex <- grad_pal(struct$value_norm)
 #struct$color_hex[4)] <- "black"
 color_vec <- setNames(struct$color_hex, struct$category)
 pattern_vec <- setNames(rep("none", length(color_vec)), struct$category)
-pattern_vec[c(1,10)] <- "stripe"
 
-chrom_plot <- ggplot(struct, aes(x = 1, y = value, fill = category, pattern = category)) +
-    geom_bar_pattern(stat = "identity", width = 0.5, color = "black", position = position_stack(reverse = TRUE),  pattern_fill="black", pattern_angle=45, pattern_density=0.05, pattern_spacing=0.05) +
-    scale_fill_manual(values = color_vec) +
+chrom_plot <- ggplot(struct, aes(x = 1, y = value, fill = age2, pattern = category)) +
+    geom_segment(aes(x=tick, xend=tick_bottom-3.3, y=label_pos, yend=label_pos)) +
+    geom_bar_pattern(stat = "identity", width = 2, color = "black", position = position_stack(reverse = TRUE),  pattern_fill="black", pattern_angle=45, pattern_density=0.05, pattern_spacing=0.05) +
+    scale_fill_gradient(low="#f7fbff", high="#08306b", name=expression(atop("Stratum age", "(million years)"))) +
     scale_pattern_manual(values = pattern_vec) +
-    geom_segment(aes(x=tick, xend=0.75, y=label_pos, yend=label_pos)) +
-    annotate(y=struct$label_pos, label=struct$label, x=struct$label_height, size=6, geom="text") +
-    annotate(y=struct$label_pos, label=struct$label2, x=struct$label_height-0.35, size=6, geom="text") +
-    annotate(y=struct$label_pos, label=struct$age, x=struct$label_height-0.70, size=6, geom="text") +
+    annotate(y=struct$label_pos, label=struct$label, x=struct$label_height+0.75, size=8, geom="text") +
+    annotate(y=struct$label_pos, label=struct$label2, x=struct$label_bottom-3.75, size=7, geom="text") +
+    annotate(y=struct$label_pos, label=struct$age, x=struct$label_bottom-4.70, size=7, geom="text") +
     coord_flip(clip="off") +
+    guides(pattern="none") +
     theme_void() +
-    theme(legend.position = "none", 
-          plot.margin = unit(c(1, 1, 1, 1), "lines"))
+    theme(
+      legend.position.inside = c(0,0),
+      legend.title = element_text(size=30),
+      legend.text = element_text(size=20),
+      legend.key.size = unit(1, units = "cm"),
+      legend.spacing.y = unit(1, "cm"),
+      axis.title.y = element_blank(),
+      axis.text.x = element_blank())
 
 chrom_plot
 
-jpeg("Figures/chrom_plot.jpeg", width=5000, height=750, res=300)
+jpeg("Figures/chrom_plot.jpeg", width=6000, height=2000, res=300)
 chrom_plot
 dev.off()
