@@ -390,7 +390,7 @@ struct$label2 <- paste(as.character(struct$size), "Mb", sep=" ")
 struct$label2[6] <- "8.0 Mb"
 struct$label2[1] <- "?"
 struct$label2[10] <- "?"
-struct$age <- c(NA, NA, "10.2 MY", "40.3 - 135.3 MY", "22 MY", "22 MY", "19.7 MY", "6.3 MY", NA, NA)
+struct$age <- c(NA, NA, "10.2 MY", "40.3 - 135.3 MY", "22 MY", "22 MY", "19.7 MY", "≤ 6.3 MY", NA, NA)
 struct$age2 <- as.numeric( c(0, 0, 10.2, 87.8, 22, 22, 19.7, 6.3, 0, 0))
 
 struct$value_norm <- rescale(struct$age2, to = c(0,1))
@@ -426,5 +426,6 @@ png("Figures/chrom_plot.png", width=6000, height=2000, res=300)
 chrom_plot
 dev.off()
   
+
 
   
