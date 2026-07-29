@@ -1,7 +1,7 @@
 ## Genomics of lark sex chromosomes
 
 
-[![NCBI](https://img.shields.io/badge/NCBI%20BioProject-PRJNA1201347-20558A)](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA1201347) [![PhaseWY](https://img.shields.io/badge/PhaseWY-github/sjellerstrand/PhaseWY-000000)]([![NCBI](https://img.shields.io/badge/NCBI%20BioProject-PRJNA1201347-20558A)](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA1201347)) [![GBE](https://img.shields.io/badge/Genome%20Biology%20and%20Evolution-XXX-0A3A67)]() [![GBE](https://img.shields.io/badge/Molecular%20Ecology-XXX-00498E)]()
+[![NCBI](https://img.shields.io/badge/NCBI%20BioProject-PRJNA1201347-20558A)](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA1201347) [![PhaseWY](https://img.shields.io/badge/PhaseWY-github.com/sjellerstrand/PhaseWY-000000)](https://github.com/sjellerstrand/PhaseWY) [![GBE](https://img.shields.io/badge/Genome%20Biology%20and%20Evolution-XXX-0A3A67)]() [![GBE](https://img.shields.io/badge/Molecular%20Ecology-XXX-00498E)]()<br>
 
 
 ![Larks](Figure/Larks_sexchrom_identification.png)<br>
